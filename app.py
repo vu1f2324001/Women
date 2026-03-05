@@ -979,14 +979,17 @@ def server_error(e):
 
 # ==================== MAIN ====================
 
+# Initialize database on app startup (works with gunicorn and flask dev server)
+print(f"Initializing database: {DATABASE}")
+if not os.path.exists(DATABASE):
+    init_database()
+    seed_sample_data()
+    print("Database created and seeded!")
+else:
+    init_database()
+    print("Database tables verified!")
+
 if __name__ == '__main__':
-    # Initialize database
-    if not os.path.exists(DATABASE):
-        init_database()
-        seed_sample_data()
-    else:
-        init_database()
-    
     # Run Flask app
     app.run(debug=True, host='0.0.0.0', port=5010)
 
