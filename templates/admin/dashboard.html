@@ -1,0 +1,541 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - EmpowerHer{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Admin Topbar - Fixed navigation at top */
+    .admin-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 2rem;
+        background: #ffffff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+    
+    .admin-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .admin-topbar-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+    
+    .admin-topbar-logo span {
+        font-size: 1.5rem;
+    }
+    
+    .admin-topbar-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-left: 2rem;
+        max-width: calc(100vw - 300px);
+        padding: 0.3rem 0;
+    }
+    
+    .admin-topbar-links a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    
+    .admin-topbar-links a:hover,
+    .admin-topbar-links a.active {
+        background: rgba(255,192,203,0.3);
+        color: var(--primary-color);
+    }
+    
+    /* Hide regular site navbar */
+    .navbar {
+        display: none !important;
+    }
+    
+    /* Mobile menu elements - hidden on desktop */
+    .mobile-menu-toggle,
+    .sidebar-overlay,
+    .sidebar-close {
+        display: none;
+    }
+    
+    /* Tablet breakpoint for topbar links */
+    @media (max-width: 992px) {
+        .admin-topbar-links {
+            max-width: calc(100vw - 200px);
+            gap: 0.3rem;
+        }
+        
+        .admin-topbar-links a {
+            padding: 0.3rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .admin-topbar-logo {
+            font-size: 1.1rem;
+        }
+        
+        .admin-topbar-logo span {
+            font-size: 1.2rem;
+        }
+    }
+    
+    /* Admin Header */
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-top: 1rem;
+    }
+    
+    .admin-header h1 {
+        font-size: 2rem;
+        color: var(--text-color);
+    }
+    
+    .admin-header .breadcrumb {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    /* Admin Sidebar */
+    .admin-sidebar {
+        width: 280px;
+        background: #ffffff;
+        padding: 2rem 1rem;
+        position: fixed;
+        height: calc(100vh - 70px);
+        top: 70px;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        display: block;
+        z-index: 999;
+    }
+    
+    .sidebar-header {
+        text-align: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 1.5rem;
+    }
+    
+    .sidebar-header .logo-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-header h2 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+    }
+    
+    .sidebar-header p {
+        font-size: 0.85rem;
+        color: var(--secondary-text);
+    }
+    
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .sidebar-menu li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        color: var(--text-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+        background: rgba(255,192,203,0.3);
+        color: var(--primary-color);
+    }
+    
+    .sidebar-menu a i {
+        width: 20px;
+        text-align: center;
+    }
+    
+    /* Admin Main Content */
+    .admin-main {
+        flex: 1;
+        margin-left: 280px;
+        padding: 2rem;
+        padding-top: 5rem;
+        background: var(--bg-color);
+    }
+    
+    /* Hide footer and newsletter on admin pages */
+    .footer,
+    .newsletter-popup {
+        display: none !important;
+    }
+    
+    /* Admin Sections */
+    .admin-section {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        overflow-x: auto;
+    }
+    
+    .admin-section h2 {
+        font-size: 1.3rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    /* Data Tables */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .data-table th {
+        font-weight: 600;
+        color: var(--text-color);
+        background: rgba(255,192,203,0.1);
+    }
+    
+    .data-table td {
+        color: var(--secondary-text);
+    }
+    
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-badge.pending {
+        background: rgba(255,193,7,0.2);
+        color: #ffc107;
+    }
+    
+    .status-badge.approved {
+        background: rgba(40,167,69,0.2);
+        color: #28a745;
+    }
+    
+    .status-badge.rejected {
+        background: rgba(220,53,69,0.2);
+        color: #dc3545;
+    }
+    
+    /* Action Buttons */
+    .action-btns {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .action-btn {
+        padding: 0.4rem 0.8rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .action-btn.approve {
+        background: rgba(40,167,69,0.2);
+        color: #28a745;
+    }
+    
+    .action-btn.approve:hover {
+        background: #28a745;
+        color: white;
+    }
+    
+    .action-btn.reject {
+        background: rgba(220,53,69,0.2);
+        color: #dc3545;
+    }
+    
+    .action-btn.reject:hover {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .action-btn.delete {
+        background: rgba(220,53,69,0.2);
+        color: #dc3545;
+    }
+    
+    .action-btn.delete:hover {
+        background: #dc3545;
+        color: white;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255,192,203,0.3);
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg,#FFC0CB,#FFB6C1);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    
+    .stat-info h3 {
+        font-size: 2rem;
+        color: var(--text-color);
+        margin-bottom: 0.2rem;
+    }
+    
+    .stat-info p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    /* Responsive for Stats Grid */
+    @media (max-width: 1200px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-card {
+            padding: 1rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+        
+        .stat-info h3 {
+            font-size: 1.5rem;
+        }
+    }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width:768px) {
+        .admin-main {
+            margin-left: 0;
+        }
+        
+        .mobile-menu-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+        
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-color);
+            border-radius: 3px;
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            background: var(--card-bg);
+            padding-top: 2rem;
+        }
+        
+        .admin-sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar-close {
+            display: block;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .admin-topbar {
+            padding: 0.8rem 1rem;
+        }
+        
+        .admin-topbar-links {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block newsletter %}{% endblock %}
+
+{% block admin_topbar %}
+<!-- Navbar - Outside content block so it appears on all admin pages -->
+<div class="admin-topbar">
+    <div class="admin-topbar-left">
+        <a href="{{ url_for('admin_dashboard') }}" class="admin-topbar-logo"><span>🌸</span> EmpowerHer</a>
+        <div class="admin-topbar-links">
+            <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('admin_achievers') }}" class="{% if request.endpoint == 'admin_achievers' %}active{% endif %}"><i class="fas fa-trophy"></i> Achievers</a>
+            <a href="{{ url_for('admin_ideas') }}" class="{% if request.endpoint == 'admin_ideas' %}active{% endif %}"><i class="fas fa-lightbulb"></i> Ideas</a>
+            <a href="{{ url_for('admin_jobs') }}" class="{% if request.endpoint == 'admin_jobs' %}active{% endif %}"><i class="fas fa-briefcase"></i> Jobs</a>
+            <a href="{{ url_for('admin_messages') }}" class="{% if request.endpoint == 'admin_messages' %}active{% endif %}"><i class="fas fa-envelope"></i> Messages</a>
+            <a href="{{ url_for('admin_courses') }}" class="{% if request.endpoint == 'admin_courses' %}active{% endif %}"><i class="fas fa-graduation-cap"></i> Courses</a>
+            <a href="{{ url_for('admin_scholarships') }}" class="{% if request.endpoint == 'admin_scholarships' %}active{% endif %}"><i class="fas fa-money-check-alt"></i> Scholarships</a>
+            <a href="{{ url_for('admin_health') }}" class="{% if request.endpoint == 'admin_health' %}active{% endif %}"><i class="fas fa-heartbeat"></i> Health</a>
+            <a href="{{ url_for('admin_safety') }}" class="{% if request.endpoint == 'admin_safety' %}active{% endif %}"><i class="fas fa-shield-alt"></i> Safety</a>
+            <a href="{{ url_for('admin_logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block admin_sidebar %}
+<!-- Sidebar - Outside content block so it appears on all admin pages -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeAdminMenu()"></div>
+<div class="admin-sidebar" id="adminSidebar">
+    <button class="sidebar-close" id="sidebarClose" onclick="closeAdminMenu()">&times;</button>
+    <div class="sidebar-header"><div class="logo-icon">🌸</div><h2>EmpowerHer</h2><p>Admin Panel</p></div>
+    <ul class="sidebar-menu">
+        <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('admin_achievers') }}" class="{% if request.endpoint == 'admin_achievers' %}active{% endif %}"><i class="fas fa-trophy"></i> Achievers</a></li>
+        <li><a href="{{ url_for('admin_ideas') }}" class="{% if request.endpoint == 'admin_ideas' %}active{% endif %}"><i class="fas fa-lightbulb"></i> Ideas</a></li>
+        <li><a href="{{ url_for('admin_jobs') }}" class="{% if request.endpoint == 'admin_jobs' %}active{% endif %}"><i class="fas fa-briefcase"></i> Jobs</a></li>
+        <li><a href="{{ url_for('admin_messages') }}" class="{% if request.endpoint == 'admin_messages' %}active{% endif %}"><i class="fas fa-envelope"></i> Messages</a></li>
+        <li><a href="{{ url_for('admin_courses') }}" class="{% if request.endpoint == 'admin_courses' %}active{% endif %}"><i class="fas fa-graduation-cap"></i> Courses</a></li>
+        <li><a href="{{ url_for('admin_scholarships') }}" class="{% if request.endpoint == 'admin_scholarships' %}active{% endif %}"><i class="fas fa-money-check-alt"></i> Scholarships</a></li>
+        <li><a href="{{ url_for('admin_health') }}" class="{% if request.endpoint == 'admin_health' %}active{% endif %}"><i class="fas fa-heartbeat"></i> Health</a></li>
+        <li><a href="{{ url_for('admin_safety') }}" class="{% if request.endpoint == 'admin_safety' %}active{% endif %}"><i class="fas fa-shield-alt"></i> Safety</a></li>
+        <li><a href="{{ url_for('admin_logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<main class="admin-main">
+    <div class="admin-header">
+        <div style="display:flex;align-items:center;gap:1rem">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleAdminMenu()"><span></span><span></span><span></span></button>
+            <div><h1>Dashboard</h1><p class="breadcrumb">Admin / Dashboard</p></div>
+        </div>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">👩‍💼</div><div class="stat-info"><h3>{{ stats.achievers }}</h3><p>Women Achievers</p></div></div>
+        <div class="stat-card"><div class="stat-icon">💡</div><div class="stat-info"><h3>{{ stats.ideas }}</h3><p>Business Ideas</p></div></div>
+        <div class="stat-card"><div class="stat-icon">💼</div><div class="stat-info"><h3>{{ stats.jobs }}</h3><p>Job Listings</p></div></div>
+        <div class="stat-card"><div class="stat-icon">📬</div><div class="stat-info"><h3>{{ stats.messages }}</h3><p>Messages</p></div></div>
+    </div>
+    {% if pending_ideas %}
+    <div class="admin-section"><h2>📝 Pending Business Ideas</h2>
+        <table class="data-table"><thead><tr><th>Name</th><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody>{% for idea in pending_ideas %}<tr><td>{{ idea.name }}</td><td>{{ idea.title }}</td><td>{{ idea.category or 'N/A' }}</td><td><span class="status-badge pending">{{ idea.status }}</span></td><td><div class="action-btns"><a href="{{ url_for('admin_approve_idea', id=idea.id) }}" class="action-btn approve">Approve</a><a href="{{ url_for('admin_reject_idea', id=idea.id) }}" class="action-btn reject">Reject</a></div></td></tr>{% endfor %}</tbody></table></div>{% endif %}
+    {% if rejected_ideas %}
+    <div class="admin-section"><h2>❌ Rejected Business Ideas</h2>
+        <table class="data-table"><thead><tr><th>Name</th><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody>{% for idea in rejected_ideas %}<tr><td>{{ idea.name }}</td><td>{{ idea.title }}</td><td>{{ idea.category or 'N/A' }}</td><td><span class="status-badge rejected">{{ idea.status }}</span></td><td><a href="{{ url_for('admin_approve_idea', id=idea.id) }}" class="action-btn approve">Approve</a></td></tr>{% endfor %}</tbody></table></div>{% endif %}
+    {% if approved_ideas %}
+    <div class="admin-section"><h2>✅ Approved Business Ideas</h2>
+        <table class="data-table"><thead><tr><th>Name</th><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody>{% for idea in approved_ideas %}<tr><td>{{ idea.name }}</td><td>{{ idea.title }}</td><td>{{ idea.category or 'N/A' }}</td><td><span class="status-badge approved">{{ idea.status }}</span></td><td><a href="{{ url_for('admin_reject_idea', id=idea.id) }}" class="action-btn reject">Reject</a></td></tr>{% endfor %}</tbody></table></div>{% endif %}
+    {% if recent_messages %}
+    <div class="admin-section"><h2>📬 Recent Messages</h2>
+        <table class="data-table"><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Date</th></tr></thead><tbody>{% for message in recent_messages %}<tr><td>{{ message.name }}</td><td>{{ message.email }}</td><td>{{ message.subject or 'N/A' }}</td><td>{{ message.created_at[:10] }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+</main>
+{% endblock %}
+
+<script>
+function toggleAdminMenu(){var s=document.querySelector('.admin-sidebar'),o=document.getElementById('sidebarOverlay'),t=document.getElementById('mobileMenuToggle');s&&s.classList.toggle('active');t&&t.classList.toggle('active');o&&o.classList.toggle('active');document.body.style.overflow=s&&s.classList.contains('active')?'hidden':'';}
+function closeAdminMenu(){var s=document.querySelector('.admin-sidebar'),o=document.getElementById('sidebarOverlay'),t=document.getElementById('mobileMenuToggle');s&&s.classList.remove('active');t&&t.classList.remove('active');o&&o.classList.remove('active');document.body.style.overflow='';}
+document.addEventListener('DOMContentLoaded',function(){var c=document.getElementById('sidebarClose');c&&c.addEventListener('click',closeAdminMenu);});
+</script>
+

@@ -1,0 +1,258 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Manage Job Listings - EmpowerHer Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .add-form {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .add-form h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .form-row .form-group {
+        margin-bottom: 0;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.7rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+    
+    .form-group textarea {
+        min-height: 80px;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block newsletter %}{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  
+   <!-- Admin Top Navigation Bar -->
+<div class="admin-topbar">
+    <div class="admin-topbar-left">
+        <a href="{{ url_for('admin_dashboard') }}" class="admin-topbar-logo">
+            <span>🌸</span> EmpowerHer
+        </a>
+        <div class="admin-topbar-links">
+            <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin_achievers') }}" class="{% if request.endpoint == 'admin_achievers' %}active{% endif %}">
+                <i class="fas fa-trophy"></i> Achievers
+            </a>
+            <a href="{{ url_for('admin_ideas') }}" class="{% if request.endpoint == 'admin_ideas' %}active{% endif %}">
+                <i class="fas fa-lightbulb"></i> Ideas
+            </a>
+            <a href="{{ url_for('admin_jobs') }}" class="{% if request.endpoint == 'admin_jobs' %}active{% endif %}">
+                <i class="fas fa-briefcase"></i> Jobs
+            </a>
+            <a href="{{ url_for('admin_messages') }}" class="{% if request.endpoint == 'admin_messages' %}active{% endif %}">
+                <i class="fas fa-envelope"></i> Messages
+            </a>
+        </div>
+    </div>
+
+</div>
+    
+    
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeAdminMenu()"></div>
+    
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu" onclick="toggleAdminMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <div>
+                    <h1>Job Listings</h1>
+                    <p class="breadcrumb">Admin / Job Listings</p>
+                </div>
+            </div>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                <i class="fas fa-home"></i> View Site
+            </a>
+        </div>
+        
+        <!-- Add New Job Form -->
+        <div class="add-form">
+            <h3>➕ Add New Job Listing</h3>
+        <form method="POST" action="{{ url_for('admin_add_job') }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Job Title *</label>
+                    <input type="text" name="title" required placeholder="e.g. Software Engineer">
+                </div>
+                <div class="form-group">
+                    <label>Company *</label>
+                    <input type="text" name="company" required placeholder="Company name">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" name="location" placeholder="e.g. Mumbai">
+                </div>
+            </div>
+            <div class="form-row" style="margin-top: 1rem;">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="Technology">Technology</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Content">Content</option>
+                        <option value="Operations">Operations</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Job Type</label>
+                    <select name="job_type">
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Contract">Contract</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row" style="margin-top: 1rem;">
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" placeholder="Job description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Requirements</label>
+                    <textarea name="requirements" placeholder="Job requirements"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                <i class="fas fa-plus"></i> Add Job
+            </button>
+        </form>
+    </div>
+    
+    <!-- Jobs Table -->
+    <div class="admin-section">
+        <h2>📋 All Job Listings</h2>
+        {% if jobs %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>{{ job.id }}</td>
+                    <td>{{ job.title }}</td>
+                    <td>{{ job.company }}</td>
+                    <td>{{ job.location or 'N/A' }}</td>
+                    <td>{{ job.category }}</td>
+                    <td>{{ job.job_type }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_delete_job', id=job.id) }}" class="action-btn delete" onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align: center; padding: 2rem; color: var(--secondary-text);">No job listings found.</p>
+        {% endif %}
+        </div>
+        </main>
+</div>
+
+<!-- Mobile Menu JavaScript -->
+<script>
+function toggleAdminMenu() {
+    var sidebar = document.querySelector('.admin-sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    var toggle = document.getElementById('mobileMenuToggle');
+    
+    sidebar.classList.toggle('active');
+    toggle.classList.toggle('active');
+    
+    if (overlay) {
+        overlay.classList.toggle('active');
+    }
+    
+    document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+}
+
+function closeAdminMenu() {
+    var sidebar = document.querySelector('.admin-sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    var toggle = document.getElementById('mobileMenuToggle');
+    
+    sidebar.classList.remove('active');
+    toggle.classList.remove('active');
+    
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var closeBtn = document.getElementById('sidebarClose');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeAdminMenu);
+    }
+    
+    var menuLinks = document.querySelectorAll('.sidebar-menu a');
+    menuLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                closeAdminMenu();
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}
+

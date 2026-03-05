@@ -1,0 +1,166 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Manage Achievers - EmpowerHer Admin{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<style>
+    .add-form {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .add-form h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.7rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="admin-main">
+<div class="admin-header">
+    <div>
+        <h1>Women Achievers</h1>
+        <p class="breadcrumb">Admin / Achievers</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-home"></i> View Site
+    </a>
+</div>
+
+<div class="add-form">
+    <h3>➕ Add New Achiever</h3>
+    <form method="POST" action="{{ url_for('admin_add_achiever') }}">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" name="name" required placeholder="Achiever's full name">
+            </div>
+            <div class="form-group">
+                <label>Achievement *</label>
+                <input type="text" name="achievement" required placeholder="Title of achievement">
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category">
+                    <option value="Health">Health</option>
+                    <option value="Education">Education</option>
+                    <option value="Safety">Safety</option>
+                    <option value="Entrepreneurship">Entrepreneurship</option>
+                    <option value="Career">Career</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row" style="margin-top: 1rem;">
+            <div class="form-group">
+                <label>Image URL</label>
+                <input type="text" name="image_url" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="form-group">
+                <label>Month</label>
+                <select name="month">
+                    <option value="">Select month</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Year</label>
+                <input type="number" name="year" value="2024" min="2020" max="2030">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+            <label>Description</label>
+            <textarea name="description" placeholder="Describe the achiever's accomplishment..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Achiever
+        </button>
+    </form>
+</div>
+
+<div class="admin-section">
+    <h2>📋 All Achievers</h2>
+    {% if achievers %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Achievement</th>
+                <th>Category</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for achiever in achievers %}
+            <tr>
+                <td>{{ achiever.id }}</td>
+                <td>{{ achiever.name }}</td>
+                <td>{{ achiever.achievement }}</td>
+                <td>{{ achiever.category }}</td>
+                <td>{{ achiever.month or 'N/A' }}</td>
+                <td>{{ achiever.year or 'N/A' }}</td>
+                <td>
+                    <a href="{{ url_for('admin_delete_achiever', id=achiever.id) }}" class="action-btn delete" onclick="return confirm('Are you sure?')">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 2rem; color: var(--secondary-text);">No achievers found.</p>
+    {% endif %}
+</div>
+</main>
+{% endblock %}
+

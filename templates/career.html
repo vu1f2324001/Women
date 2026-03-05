@@ -1,0 +1,538 @@
+{% extends "base.html" %}
+
+{% block title %}Career - EmpowerHer{% endblock %}
+
+{% block extra_css %}
+<style>
+    .career-hero {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.3) 0%, rgba(230, 230, 250, 0.3) 100%);
+        padding: 8rem 2rem 4rem;
+        text-align: center;
+    }
+    
+    .career-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+    
+    .career-hero p {
+        font-size: 1.2rem;
+        color: var(--secondary-text);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .career-content {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* Job Search */
+    .job-search {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-filters {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .search-input {
+        flex: 1;
+        min-width: 250px;
+        padding: 0.8rem 1rem;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+    
+    .filter-select {
+        padding: 0.8rem 1rem;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-size: 1rem;
+        background: white;
+        cursor: pointer;
+        min-width: 150px;
+    }
+    
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+    
+    .search-btn {
+        padding: 0.8rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        background: #e8a8b5;
+    }
+    
+    /* Job Listings */
+    .jobs-section {
+        margin-bottom: 4rem;
+    }
+    
+    .jobs-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+    
+    .jobs-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+    
+    .job-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .job-title-company h3 {
+        font-size: 1.3rem;
+        color: var(--text-color);
+        margin-bottom: 0.3rem;
+    }
+    
+    .job-title-company p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    .job-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .job-badge {
+        background: rgba(255, 192, 203, 0.3);
+        color: var(--primary-color);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .job-badge.type {
+        background: rgba(147, 112, 219, 0.2);
+        color: #9370DB;
+    }
+    
+    .job-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .job-detail {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    .job-detail i {
+        color: var(--primary-color);
+    }
+    
+    .job-description {
+        color: var(--secondary-text);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .job-requirements {
+        margin-bottom: 1.5rem;
+    }
+    
+    .job-requirements h4 {
+        font-size: 0.9rem;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .job-requirements p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    .job-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    /* Mentorship Section */
+    .mentorship-section {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.1) 0%, rgba(230, 230, 250, 0.1) 100%);
+        border-radius: 20px;
+        padding: 3rem;
+        margin-bottom: 4rem;
+    }
+    
+    .mentorship-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+        text-align: center;
+    }
+    
+    .mentorship-section > p {
+        text-align: center;
+        color: var(--secondary-text);
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .mentorship-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .mentor-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .mentor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .mentor-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+    }
+    
+    .mentor-card h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 0.3rem;
+    }
+    
+    .mentor-role {
+        color: var(--primary-color);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .mentor-card p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    /* Career Resources */
+    .resources-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+    
+    .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .resource-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .resource-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255, 192, 203, 0.3);
+    }
+    
+    .resource-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .resource-card h3 {
+        font-size: 1.1rem;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .resource-card p {
+        font-size: 0.9rem;
+        color: var(--secondary-text);
+    }
+    
+    @media (max-width: 768px) {
+        .career-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .search-filters {
+            flex-direction: column;
+        }
+        
+        .search-input, .filter-select, .search-btn {
+            width: 100%;
+        }
+        
+        .job-header {
+            flex-direction: column;
+        }
+        
+        .job-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Career Hero -->
+<section class="career-hero">
+    <h1>💼 Career Development</h1>
+    <p>Explore job opportunities, find mentorship, and advance your professional journey.</p>
+</section>
+
+<!-- Career Content -->
+<section class="career-content">
+    <!-- Job Search -->
+    <div class="job-search">
+        <div class="search-filters">
+            <input type="text" class="search-input" id="jobSearch" placeholder="Search jobs...">
+            <select class="filter-select" id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="Technology">Technology</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Finance">Finance</option>
+                <option value="Content">Content</option>
+                <option value="Operations">Operations</option>
+            </select>
+            <select class="filter-select" id="typeFilter">
+                <option value="">All Types</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Internship">Internship</option>
+            </select>
+            <button class="search-btn" onclick="filterJobs()">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </div>
+    </div>
+    
+    <!-- Job Listings -->
+    <div class="jobs-section">
+        <h2>📋 Job Listings</h2>
+        
+        {% if jobs %}
+        <div class="jobs-grid" id="jobsGrid">
+            {% for job in jobs %}
+            <div class="job-card" data-category="{{ job.category }}" data-type="{{ job.job_type }}">
+                <div class="job-header">
+                    <div class="job-title-company">
+                        <h3>{{ job.title }}</h3>
+                        <p>{{ job.company }}</p>
+                    </div>
+                    <div class="job-badges">
+                        <span class="job-badge">{{ job.category }}</span>
+                        <span class="job-badge type">{{ job.job_type }}</span>
+                    </div>
+                </div>
+                
+                <div class="job-details">
+                    <div class="job-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ job.location }}</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-clock"></i>
+                        <span>Posted recently</span>
+                    </div>
+                </div>
+                
+                <p class="job-description">{{ job.description }}</p>
+                
+                <div class="job-requirements">
+                    <h4>Requirements:</h4>
+                    <p>{{ job.requirements }}</p>
+                </div>
+                
+                <div class="job-actions">
+                    <button class="btn btn-primary" onclick="applyJob('{{ job.title }}', '{{ job.company }}')">
+                        <i class="fas fa-paper-plane"></i> Apply Now
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-bookmark"></i> Save
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 3rem; color: var(--secondary-text);">
+            <p>No job listings available at the moment. Check back soon!</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Mentorship Section -->
+    <div class="mentorship-section">
+        <h2>🌟 Find a Mentor</h2>
+        <p>Connect with experienced professionals who can guide you in your career journey.</p>
+        
+        <div class="mentorship-grid">
+            <div class="mentor-card">
+                <div class="mentor-avatar">👩‍💼</div>
+                <h3>Sarah Johnson</h3>
+                <p class="mentor-role">Tech Lead at Google</p>
+                <p>15+ years in software engineering, passionate about women in tech.</p>
+            </div>
+            
+            <div class="mentor-card">
+                <div class="mentor-avatar">👩‍🎓</div>
+                <h3>Dr. Emily Chen</h3>
+                <p class="mentor-role">Professor at Stanford</p>
+                <p>Career development expert with focus on leadership.</p>
+            </div>
+            
+            <div class="mentor-card">
+                <div class="mentor-avatar">👩‍💻</div>
+                <h3>Priya Sharma</h3>
+                <p class="mentor-role">CEO, StartupX</p>
+                <p>Entrepreneur and startup advisor with 10+ years experience.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('contact') }}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Request a Mentor
+            </a>
+        </div>
+    </div>
+    
+    <!-- Career Resources -->
+    <div class="resources-section">
+        <h2>📚 Career Resources</h2>
+        <div class="resources-grid">
+            <div class="resource-card">
+                <div class="resource-icon">📝</div>
+                <h3>Resume Building</h3>
+                <p>Learn how to create a compelling resume that stands out.</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">🎯</div>
+                <h3>Interview Prep</h3>
+                <p>Tips and strategies for acing your job interviews.</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">📈</div>
+                <h3>Career Growth</h3>
+                <p>Strategies for advancing your career and leadership skills.</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">🌐</div>
+                <h3>Networking</h3>
+                <p>Build professional connections that advance your career.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+    function filterJobs() {
+        const searchTerm = document.getElementById('jobSearch').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+        const type = document.getElementById('typeFilter').value;
+        const cards = document.querySelectorAll('.job-card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const company = card.querySelector('.job-title-company p').textContent.toLowerCase();
+            const cardCategory = card.getAttribute('data-category');
+            const cardType = card.getAttribute('data-type');
+            
+            const matchesSearch = title.includes(searchTerm) || company.includes(searchTerm);
+            const matchesCategory = !category || cardCategory === category;
+            const matchesType = !type || cardType === type;
+            
+            if (matchesSearch && matchesCategory && matchesType) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    function applyJob(title, company) {
+        alert(`Application Initiated!\n\nPosition: ${title}\nCompany: ${company}\n\nIn a real implementation, this would open an application form or redirect to the company's career page.`);
+    }
+    
+    // Add event listeners for real-time filtering
+    document.getElementById('jobSearch').addEventListener('input', filterJobs);
+    document.getElementById('categoryFilter').addEventListener('change', filterJobs);
+    document.getElementById('typeFilter').addEventListener('change', filterJobs);
+</script>
+{% endblock %}
+
+{% endblock %}
+

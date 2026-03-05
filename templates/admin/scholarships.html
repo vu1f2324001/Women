@@ -1,0 +1,26 @@
+{% extends "admin/dashboard.html" %}
+{% block title %}Manage Scholarships - EmpowerHer Admin{% endblock %}
+{% block extra_css %}
+{{ super() }}
+<style>
+    .add-form { background: var(--card-bg); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; }
+    .add-form h3 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 1rem; }
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-color); font-size: 0.9rem; }
+    .form-group input, .form-group select { width: 100%; padding: 0.7rem; border: 2px solid #eee; border-radius: 8px; font-size: 0.9rem; }
+    .form-group input:focus { outline: none; border-color: var(--primary-color); }
+</style>
+{% endblock %}
+{% block content %}
+<main class="admin-main">
+<div class="admin-header"><div><h1>Scholarships</h1><p class="breadcrumb">Admin / Scholarships</p></div><a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="fas fa-home"></i> View Site</a></div>
+<div class="add-form"><h3>➕ Add New Scholarship</h3>
+<form method="POST" action="{{ url_for('admin_add_scholarship') }}">
+<div class="form-row"><div class="form-group"><label>Name *</label><input type="text" name="name" required placeholder="Scholarship name"></div><div class="form-group"><label>Provider *</label><input type="text" name="provider" required placeholder="Provider"></div><div class="form-group"><label>Amount *</label><input type="text" name="amount" required placeholder="₹50,000/year"></div></div>
+<div class="form-row" style="margin-top:1rem"><div class="form-group"><label>Eligibility</label><input type="text" name="eligibility" placeholder="Eligibility criteria"></div><div class="form-group"><label>Deadline</label><input type="text" name="deadline" placeholder="March 31, 2024"></div><div class="form-group"><label>Link</label><input type="text" name="link" placeholder="https://..."></div></div>
+<button type="submit" class="btn btn-primary" style="margin-top:1rem"><i class="fas fa-plus"></i> Add Scholarship</button></form></div>
+<div class="admin-section"><h2>📋 All Scholarships</h2>
+{% if scholarships %}<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Provider</th><th>Amount</th><th>Deadline</th><th>Actions</th></tr></thead><tbody>{% for s in scholarships %}<tr><td>{{ s.id }}</td><td>{{ s.name }}</td><td>{{ s.provider }}</td><td>{{ s.amount }}</td><td>{{ s.deadline or 'N/A' }}</td><td><a href="{{ url_for('admin_delete_scholarship', id=s.id) }}" class="action-btn delete" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a></td></tr>{% endfor %}</tbody></table>{% else %}<p style="text-align:center;padding:2rem;color:var(--secondary-text)">No scholarships found.</p>{% endif %}</div>
+</main>
+{% endblock %}
+

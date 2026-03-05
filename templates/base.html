@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EmpowerHer - A women-centric platform promoting Health, Education, Safety, Entrepreneurship, and Career development">
+    <title>{% block title %}EmpowerHer - Empowering Women Worldwide{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    {% block admin_topbar %}{% endblock %}
+    
+    {% block admin_sidebar %}{% endblock %}
+    
+    {% block navbar %}
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="logo">
+                <span class="logo-icon">🌸</span>
+                <span class="logo-text">EmpowerHer</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('health') }}" class="{% if request.endpoint == 'health' %}active{% endif %}">Health</a></li>
+                <li><a href="{{ url_for('education') }}" class="{% if request.endpoint == 'education' %}active{% endif %}">Education</a></li>
+                <li><a href="{{ url_for('safety') }}" class="{% if request.endpoint == 'safety' %}active{% endif %}">Safety</a></li>
+                <li><a href="{{ url_for('entrepreneurship') }}" class="{% if request.endpoint == 'entrepreneurship' %}active{% endif %}">Entrepreneurship</a></li>
+                <li><a href="{{ url_for('career') }}" class="{% if request.endpoint == 'career' %}active{% endif %}">Career</a></li>
+                <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+            </ul>
+            
+            <div class="nav-actions">
+                <!-- Dark/Light Mode Toggle -->
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        <span>{{ message }}</span>
+                        <button class="flash-close" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>EmpowerHer</h3>
+                    <p>Empowering women through education, health, safety, entrepreneurship, and career development. Together, we rise!</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('health') }}">Health</a></li>
+                        <li><a href="{{ url_for('education') }}">Education</a></li>
+                        <li><a href="{{ url_for('safety') }}">Safety</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('entrepreneurship') }}">Business Ideas</a></li>
+                        <li><a href="{{ url_for('career') }}">Job Listings</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                        <li><a href="{{ url_for('admin_login') }}">Admin Login</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to get updates on latest opportunities and resources.</p>
+                    <form class="newsletter-form" action="{{ url_for('subscribe_newsletter') }}" method="POST">
+                        <input type="email" name="email" placeholder="Enter your email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 EmpowerHer. All rights reserved. Made with <span class="heart">❤️</span> for women worldwide.</p>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+
+    <!-- Newsletter Popup -->
+    {% block newsletter %}
+    <div class="newsletter-popup" id="newsletterPopup">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closeNewsletterPopup()">&times;</button>
+            <div class="popup-icon">🌸</div>
+            <h3>Join Our Community!</h3>
+            <p>Subscribe to our newsletter for exclusive updates, tips, and opportunities tailored for women.</p>
+            <form action="{{ url_for('subscribe_newsletter') }}" method="POST">
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+            <p class="popup-note">No spam, we promise!</p>
+        </div>
+    </div>
+    {% endblock %}
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

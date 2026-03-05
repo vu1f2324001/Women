@@ -1,0 +1,156 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Manage Jobs - EmpowerHer Admin{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<style>
+    .add-form {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .add-form h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color);
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.7rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="admin-main">
+<div class="admin-header">
+    <div>
+        <h1>Job Listings</h1>
+        <p class="breadcrumb">Admin / Jobs</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-home"></i> View Site
+    </a>
+</div>
+
+<div class="add-form">
+    <h3>➕ Add New Job</h3>
+    <form method="POST" action="{{ url_for('admin_add_job') }}">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Job Title *</label>
+                <input type="text" name="title" required placeholder="e.g. Software Engineer">
+            </div>
+            <div class="form-group">
+                <label>Company *</label>
+                <input type="text" name="company" required placeholder="e.g. TechWomen Inc.">
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" name="location" placeholder="e.g. Remote, Mumbai">
+            </div>
+        </div>
+        <div class="form-row" style="margin-top: 1rem;">
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category">
+                    <option value="Technology">Technology</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Education">Education</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Job Type</label>
+                <select name="job_type">
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Internship">Internship</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+            <label>Description</label>
+            <textarea name="description" placeholder="Job description..."></textarea>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+            <label>Requirements</label>
+            <textarea name="requirements" placeholder="Job requirements..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+            <i class="fas fa-plus"></i> Add Job
+        </button>
+    </form>
+</div>
+
+<div class="admin-section">
+    <h2>💼 All Jobs</h2>
+    {% if jobs %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.id }}</td>
+                <td>{{ job.title }}</td>
+                <td>{{ job.company }}</td>
+                <td>{{ job.location or 'N/A' }}</td>
+                <td>{{ job.job_type or 'N/A' }}</td>
+                <td>
+                    <a href="{{ url_for('admin_delete_job', id=job.id) }}" class="action-btn delete" onclick="return confirm('Are you sure?')">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 2rem; color: var(--secondary-text);">No jobs found.</p>
+    {% endif %}
+</div>
+</main>
+{% endblock %}
+

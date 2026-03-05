@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+
+{% block title %}Safety - EmpowerHer{% endblock %}
+
+{% block extra_css %}
+<style>
+    .safety-hero {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.3) 0%, rgba(230, 230, 250, 0.3) 100%);
+        padding: 8rem 2rem 4rem;
+        text-align: center;
+    }
+    
+    .safety-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+    
+    .safety-hero p {
+        font-size: 1.2rem;
+        color: var(--secondary-text);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .safety-content {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* Emergency Alert Button */
+    .emergency-section {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .emergency-btn {
+        background: white;
+        color: #ff6b6b;
+        border: none;
+        padding: 1.5rem 3rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .emergency-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .emergency-section p {
+        color: rgba(255, 255, 255, 0.9);
+        margin-top: 1rem;
+    }
+    
+    /* Emergency Contacts */
+    .contacts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .contact-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .contact-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .contact-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2rem;
+    }
+    
+    .contact-card h3 {
+        font-size: 1.3rem;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .contact-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .contact-card p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    /* Map Section */
+    .map-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .map-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+    }
+    
+    .map-container {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.2) 0%, rgba(230, 230, 250, 0.2) 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .map-placeholder {
+        text-align: center;
+        color: var(--secondary-text);
+    }
+    
+    .map-placeholder i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+    
+    /* Safety Tips */
+    .tips-section {
+        margin-bottom: 3rem;
+    }
+    
+    .tips-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+    
+    .tips-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    
+    .tip-item {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        transition: all 0.3s ease;
+    }
+    
+    .tip-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 10px 20px rgba(255, 192, 203, 0.2);
+    }
+    
+    .tip-number {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #8B4557;
+        flex-shrink: 0;
+    }
+    
+    .tip-content h4 {
+        font-size: 1.1rem;
+        color: var(--text-color);
+        margin-bottom: 0.3rem;
+    }
+    
+    .tip-content p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    /* Safety Apps */
+    .apps-section {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.1) 0%, rgba(230, 230, 250, 0.1) 100%);
+        border-radius: 20px;
+        padding: 2rem;
+    }
+    
+    .apps-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+    
+    .apps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .app-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .app-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .app-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .app-card h3 {
+        font-size: 1.1rem;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .app-card p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+        .safety-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .emergency-btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+        }
+        
+        .contact-number {
+            font-size: 1.5rem;
+        }
+        
+        .tips-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Safety Hero -->
+<section class="safety-hero">
+    <h1>🛡️ Women's Safety</h1>
+    <p>Your safety is our priority. Access emergency contacts, safety resources, and support services.</p>
+</section>
+
+<!-- Safety Content -->
+<section class="safety-content">
+    <!-- Emergency Alert Button -->
+    <div class="emergency-section">
+        <button class="emergency-btn" onclick="triggerEmergency()">
+            <i class="fas fa-exclamation-triangle"></i>
+            SOS Emergency Alert
+        </button>
+        <p>Tap to simulate emergency alert (UI demo only)</p>
+    </div>
+    
+    <!-- Emergency Contacts -->
+    <h2 style="margin-bottom: 1.5rem;">📞 Emergency Contacts</h2>
+    <div class="contacts-grid">
+        {% for contact in contacts %}
+        <div class="contact-card">
+            <div class="contact-icon">📱</div>
+            <h3>{{ contact.name }}</h3>
+            <div class="contact-number">{{ contact.number }}</div>
+            <p>{{ contact.description }}</p>
+            <a href="tel:{{ contact.number }}" class="btn btn-primary" style="margin-top: 1rem;">
+                <i class="fas fa-phone"></i> Call Now
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Map Section -->
+    <div class="map-section">
+        <h2>📍 Safe Locations Near You</h2>
+        
+        <!-- Location Detection Button -->
+        <div style="margin-bottom: 1.5rem; text-align: center;">
+            <button class="btn btn-primary" onclick="detectMyLocation()" style="padding: 0.8rem 1.5rem;">
+                <i class="fas fa-location-arrow"></i> Detect My Location
+            </button>
+            <p id="locationStatus" style="margin-top: 0.5rem; color: var(--secondary-text); font-size: 0.9rem;"></p>
+        </div>
+        
+        <!-- Safe Locations List -->
+        {% if locations %}
+        <div id="locationsList">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-color);">Nearby Safe Places:</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                {% for location in locations %}
+                <div class="location-card" style="background: var(--card-bg); border-radius: 15px; padding: 1.5rem; border: 2px solid transparent; transition: all 0.3s ease;" data-lat="{{ location.latitude }}" data-lon="{{ location.longitude }}">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 50px; height: 50px; background: {% if location.type == 'Police' %}rgba(30, 136, 229, 0.2){% elif location.type == 'Hospital' %}rgba(220, 53, 69, 0.2){% elif location.type == 'Helpline' %}rgba(255, 193, 7, 0.2){% elif location.type == 'Shelter' %}rgba(40, 167, 69, 0.2){% else %}rgba(108, 117, 125, 0.2){% endif %}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            {% if location.type == 'Police' %}👮
+                            {% elif location.type == 'Hospital' %}🏥
+                            {% elif location.type == 'Helpline' %}📞
+                            {% elif location.type == 'Shelter' %}🏠
+                            {% else %}📍{% endif %}
+                        </div>
+                        <div>
+                            <h4 style="font-size: 1.1rem; color: var(--text-color); margin-bottom: 0.2rem;">{{ location.name }}</h4>
+                            <span style="display: inline-block; padding: 0.2rem 0.6rem; border-radius: 10px; font-size: 0.75rem; background: {% if location.type == 'Police' %}rgba(30, 136, 229, 0.2); color: #1e88e5{% elif location.type == 'Hospital' %}rgba(220, 53, 69, 0.2); color: #dc3545{% elif location.type == 'Helpline' %}rgba(255, 193, 7, 0.2); color: #ffc107{% elif location.type == 'Shelter' %}rgba(40, 167, 69, 0.2); color: #28a745{% else %}rgba(108, 117, 125, 0.2); color: #6c757d{% endif %};">{{ location.type }}</span>
+                        </div>
+                    {% if location.address %}
+                    <p style="color: var(--secondary-text); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-map-marker-alt"></i> {{ location.address }}
+                    </p>
+                    {% endif %}
+                    {% if location.phone %}
+                    <p style="color: var(--secondary-text); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-phone"></i> {{ location.phone }}
+                    </p>
+                    {% endif %}
+                    {% if location.description %}
+                    <p style="color: var(--secondary-text); font-size: 0.85rem;">{{ location.description }}</p>
+                    {% endif %}
+                    <div class="distance-info" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; display: none;">
+                        <span style="color: var(--primary-color); font-weight: 600;">
+                            <i class="fas fa-route"></i> <span class="distance-value">--</span> away
+                        </span>
+                    </div>
+                    {% if location.phone %}
+                    <a href="tel:{{ location.phone }}" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">
+                        <i class="fas fa-phone"></i> Call
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+        <div class="map-container">
+            <div class="map-placeholder">
+                <i class="fas fa-map-marker-alt"></i>
+                <p>No Safe Locations Added Yet</p>
+                <p style="font-size: 0.9rem;">Admin can add safe locations from the admin panel</p>
+            </div>
+        {% endif %}
+    </div> REPLACE
+    </div>
+    
+    <!-- Safety Tips -->
+    <div class="tips-section">
+        <h2>💡 Safety Tips</h2>
+        <div class="tips-list">
+            <div class="tip-item">
+                <span class="tip-number">1</span>
+                <div class="tip-content">
+                    <h4>Stay Aware</h4>
+                    <p>Always be aware of your surroundings, especially in unfamiliar areas.</p>
+                </div>
+            </div>
+            
+            <div class="tip-item">
+                <span class="tip-number">2</span>
+                <div class="tip-content">
+                    <h4>Share Your Location</h4>
+                    <p>Keep your location sharing enabled with trusted family or friends.</p>
+                </div>
+            </div>
+            
+            <div class="tip-item">
+                <span class="tip-number">3</span>
+                <div class="tip-content">
+                    <h4>Trust Your Instincts</h4>
+                    <p>If something feels wrong, remove yourself from the situation immediately.</p>
+                </div>
+            </div>
+            
+            <div class="tip-item">
+                <span class="tip-number">4</span>
+                <div class="tip-content">
+                    <h4>Learn Self-Defense</h4>
+                    <p>Consider taking self-defense classes to boost your confidence.</p>
+                </div>
+            </div>
+            
+            <div class="tip-item">
+                <span class="tip-number">5</span>
+                <div class="tip-content">
+                    <h4>Keep Emergency Numbers</h4>
+                    <p>Save emergency contacts on your phone for quick access.</p>
+                </div>
+            </div>
+            
+            <div class="tip-item">
+                <span class="tip-number">6</span>
+                <div class="tip-content">
+                    <h4>Use Well-Lit Routes</h4>
+                    <p>Prefer well-lit, populated areas when walking alone at night.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Safety Apps -->
+    <div class="apps-section">
+        <h2>📲 Safety Apps</h2>
+        <div class="apps-grid">
+            <div class="app-card">
+                <div class="app-icon">🛡️</div>
+                <h3>SafeWomen</h3>
+                <p>Personal safety app with panic button and location sharing</p>
+            </div>
+            
+            <div class="app-card">
+                <div class="app-icon">📍</div>
+                <h3>bSafe</h3>
+                <p>Location tracking and emergency alerts to trusted contacts</p>
+            </div>
+            
+            <div class="app-card">
+                <div class="app-icon">🚨</div>
+                <h3>Noonlight</h3>
+                <p>Instant emergency response with one tap</p>
+            </div>
+            
+            <div class="app-card">
+                <div class="app-icon">👥</div>
+                <h3>Circle of 6</h3>
+                <p>Connect with 6 trusted contacts for emergency situations</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+    function triggerEmergency() {
+        // Simulate emergency alert (UI demo only)
+        alert('🚨 EMERGENCY ALERT SIMULATION\n\nThis is a demo of the emergency alert feature.\n\nIn a real implementation, this would:\n- Send your location to emergency contacts\n- Alert nearby authorities\n- Provide you with immediate guidance\n\nFor real emergencies, please dial emergency services directly.');
+    }
+</script>
+{% endblock %}
+
+{% endblock %}
+

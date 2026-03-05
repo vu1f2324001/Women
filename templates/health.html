@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+
+{% block title %}Health - EmpowerHer{% endblock %}
+
+{% block extra_css %}
+<style>
+    .health-hero {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.3) 0%, rgba(230, 230, 250, 0.3) 100%);
+        padding: 8rem 2rem 4rem;
+        text-align: center;
+    }
+    
+    .health-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+    
+    .health-hero p {
+        font-size: 1.2rem;
+        color: var(--secondary-text);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .health-content {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .health-section {
+        margin-bottom: 4rem;
+    }
+    
+    .health-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .tips-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .tip-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .tip-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .tip-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .tip-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+    
+    .tip-card p {
+        color: var(--secondary-text);
+        line-height: 1.6;
+    }
+    
+    .articles-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    
+    .article-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .article-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+    }
+    
+    .article-content {
+        padding: 1.5rem;
+    }
+    
+    .article-tag {
+        display: inline-block;
+        background: rgba(255, 192, 203, 0.3);
+        color: var(--primary-color);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .article-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+    
+    .article-content p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+    }
+    
+    .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .video-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .video-thumbnail {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .play-button {
+        width: 60px;
+        height: 60px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .video-thumbnail:hover .play-button {
+        transform: scale(1.1);
+    }
+    
+    .video-content {
+        padding: 1rem;
+    }
+    
+    .video-content h3 {
+        font-size: 1rem;
+        color: var(--text-color);
+    }
+    
+    .video-content p {
+        font-size: 0.85rem;
+        color: var(--secondary-text);
+    }
+    
+    .health-resources {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.1) 0%, rgba(230, 230, 250, 0.1) 100%);
+        padding: 4rem 2rem;
+        border-radius: 20px;
+    }
+    
+    .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .resource-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .resource-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255, 192, 203, 0.3);
+    }
+    
+    .resource-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .resource-card h3 {
+        font-size: 1.1rem;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .resource-card p {
+        font-size: 0.9rem;
+        color: var(--secondary-text);
+    }
+    
+    @media (max-width: 768px) {
+        .health-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .tips-grid, .articles-section, .videos-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Health Hero -->
+<section class="health-hero">
+    <h1>💪 Women's Health</h1>
+    <p>Your health is your wealth. Access vital resources, tips, and information to maintain physical and mental well-being.</p>
+</section>
+
+<!-- Health Tips Section -->
+<section class="health-content">
+    <div class="health-section">
+        <h2>🌸 Daily Health Tips</h2>
+        <div class="tips-grid">
+            {% for tip in tips %}
+            <div class="tip-card">
+                <div class="tip-icon">{{ tip.icon }}</div>
+                <h3>{{ tip.title }}</h3>
+                <p>{{ tip.content }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Health Articles -->
+    <div class="health-section">
+        <h2>📖 Featured Articles</h2>
+        <div class="articles-section">
+            {% if articles %}
+                {% for article in articles %}
+                <div class="article-card">
+                    <div class="article-image">{{ article.image_emoji or '📄' }}</div>
+                    <div class="article-content">
+                        <span class="article-tag">{{ article.tag or 'Article' }}</span>
+                        <h3>{{ article.title }}</h3>
+                        <p>{{ article.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="article-card">
+                <div class="article-image">🧬</div>
+                <div class="article-content">
+                    <span class="article-tag">Wellness</span>
+                    <h3>Understanding Women's Health</h3>
+                    <p>A comprehensive guide to maintaining optimal health at every stage of life.</p>
+                </div>
+            </div>
+            
+            <div class="article-card">
+                <div class="article-image">🧠</div>
+                <div class="article-content">
+                    <span class="article-tag">Mental Health</span>
+                    <h3>Mental Wellness for Women</h3>
+                    <p>Tips and strategies for managing stress, anxiety, and maintaining mental balance.</p>
+                </div>
+            </div>
+            
+            <div class="article-card">
+                <div class="article-image">💪</div>
+                <div class="article-content">
+                    <span class="article-tag">Fitness</span>
+                    <h3>Fitness Routine for Busy Women</h3>
+                    <p>Quick and effective workouts that fit into your busy schedule.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Health Videos -->
+    <div class="health-section">
+        <h2>🎬 Recommended Videos</h2>
+        <div class="videos-grid">
+            {% if videos %}
+                {% for video in videos %}
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="play-button"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="video-content">
+                        <h3>{{ video.title }}</h3>
+                        <p>{{ video.description or 'Video content' }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <div class="play-button"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="video-content">
+                    <h3>10-Minute Morning Yoga</h3>
+                    <p>Start your day with energizing yoga</p>
+                </div>
+            </div>
+            
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <div class="play-button"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="video-content">
+                    <h3>Healthy Cooking Tips</h3>
+                    <p>Quick and nutritious meal ideas</p>
+                </div>
+            </div>
+            
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <div class="play-button"><i class="fas fa-play"></i></div>
+                </div>
+                <div class="video-content">
+                    <h3>Stress Management</h3>
+                    <p>Techniques for inner peace</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Health Resources -->
+    <div class="health-resources">
+        <h2 style="text-align: center; margin-bottom: 2rem;">🏥 Health Resources</h2>
+        <div class="resources-grid">
+            {% if resources %}
+                {% for resource in resources %}
+                <div class="resource-card">
+                    <div class="resource-icon">{{ resource.icon }}</div>
+                    <h3>{{ resource.title }}</h3>
+                    <p>{{ resource.description }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="resource-card">
+                <div class="resource-icon">🏥</div>
+                <h3>Nearby Hospitals</h3>
+                <p>Find hospitals and clinics in your area</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">👩‍⚕️</div>
+                <h3>Find a Doctor</h3>
+                <p>Connect with healthcare professionals</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">💊</div>
+                <h3>Medicine Info</h3>
+                <p>Learn about common medications</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="resource-icon">📞</div>
+                <h3>24/7 Helpline</h3>
+                <p>Call for emergency health support</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

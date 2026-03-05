@@ -1,0 +1,89 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Manage Ideas - EmpowerHer Admin{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<style>
+    .status-badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-badge.pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+    }
+    
+    .status-badge.approved {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    
+    .status-badge.rejected {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="admin-main">
+<div class="admin-header">
+    <div>
+        <h1>Business Ideas</h1>
+        <p class="breadcrumb">Admin / Ideas</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-home"></i> View Site
+    </a>
+</div>
+
+<div class="admin-section">
+    <h2>💡 All Business Ideas</h2>
+    {% if ideas %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for idea in ideas %}
+            <tr>
+                <td>{{ idea.id }}</td>
+                <td>{{ idea.name }}</td>
+                <td>{{ idea.title }}</td>
+                <td>{{ idea.category or 'N/A' }}</td>
+                <td><span class="status-badge {{ idea.status }}">{{ idea.status }}</span></td>
+                <td>
+                    <div class="action-btns">
+                        {% if idea.status == 'pending' %}
+                        <a href="{{ url_for('admin_approve_idea', id=idea.id) }}" class="action-btn approve">Approve</a>
+                        <a href="{{ url_for('admin_reject_idea', id=idea.id) }}" class="action-btn reject">Reject</a>
+                        {% elif idea.status == 'rejected' %}
+                        <a href="{{ url_for('admin_approve_idea', id=idea.id) }}" class="action-btn approve">Approve</a>
+                        {% else %}
+                        <a href="{{ url_for('admin_reject_idea', id=idea.id) }}" class="action-btn reject">Reject</a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 2rem; color: var(--secondary-text);">No business ideas found.</p>
+    {% endif %}
+</div>
+</main>
+{% endblock %}
+

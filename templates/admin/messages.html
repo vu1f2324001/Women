@@ -1,0 +1,50 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Messages - EmpowerHer Admin{% endblock %}
+
+{% block content %}
+<main class="admin-main">
+<div class="admin-header">
+    <div>
+        <h1>Contact Messages</h1>
+        <p class="breadcrumb">Admin / Messages</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-home"></i> View Site
+    </a>
+</div>
+
+<div class="admin-section">
+    <h2>📬 All Messages</h2>
+    {% if messages %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+            <tr>
+                <td>{{ message.id }}</td>
+                <td>{{ message.name }}</td>
+                <td>{{ message.email }}</td>
+                <td>{{ message.subject or 'N/A' }}</td>
+                <td>{{ message.message[:50] }}...</td>
+                <td>{{ message.created_at[:10] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 2rem; color: var(--secondary-text);">No messages found.</p>
+    {% endif %}
+</div>
+</main>
+{% endblock %}
+

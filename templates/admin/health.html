@@ -1,0 +1,46 @@
+{% extends "admin/dashboard.html" %}
+{% block title %}Manage Health Content - EmpowerHer Admin{% endblock %}
+{% block extra_css %}
+{{ super() }}
+<style>
+    .add-form { background: var(--card-bg); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; }
+    .add-form h3 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 1rem; }
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-color); font-size: 0.9rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 0.7rem; border: 2px solid #eee; border-radius: 8px; font-size: 0.9rem; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
+    .section-card { background: var(--card-bg); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; }
+    .section-card h3 { font-size: 1.1rem; color: var(--text-color); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #eee; }
+</style>
+{% endblock %}
+<!-- Sidebar - Outside content block so it appears on all admin pages -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeAdminMenu()"></div>
+<div class="admin-sidebar" id="adminSidebar">
+    <button class="sidebar-close" id="sidebarClose" onclick="closeAdminMenu()">&times;</button>
+    <div class="sidebar-header"><div class="logo-icon">🌸</div><h2>EmpowerHer</h2><p>Admin Panel</p></div>
+    <ul class="sidebar-menu">
+        <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('admin_achievers') }}" class="{% if request.endpoint == 'admin_achievers' %}active{% endif %}"><i class="fas fa-trophy"></i> Achievers</a></li>
+        <li><a href="{{ url_for('admin_ideas') }}" class="{% if request.endpoint == 'admin_ideas' %}active{% endif %}"><i class="fas fa-lightbulb"></i> Ideas</a></li>
+        <li><a href="{{ url_for('admin_jobs') }}" class="{% if request.endpoint == 'admin_jobs' %}active{% endif %}"><i class="fas fa-briefcase"></i> Jobs</a></li>
+        <li><a href="{{ url_for('admin_messages') }}" class="{% if request.endpoint == 'admin_messages' %}active{% endif %}"><i class="fas fa-envelope"></i> Messages</a></li>
+        <li><a href="{{ url_for('admin_courses') }}" class="{% if request.endpoint == 'admin_courses' %}active{% endif %}"><i class="fas fa-graduation-cap"></i> Courses</a></li>
+        <li><a href="{{ url_for('admin_scholarships') }}" class="{% if request.endpoint == 'admin_scholarships' %}active{% endif %}"><i class="fas fa-money-check-alt"></i> Scholarships</a></li>
+        <li><a href="{{ url_for('admin_health') }}" class="{% if request.endpoint == 'admin_health' %}active{% endif %}"><i class="fas fa-heartbeat"></i> Health</a></li>
+        <li><a href="{{ url_for('admin_safety') }}" class="{% if request.endpoint == 'admin_safety' %}active{% endif %}"><i class="fas fa-shield-alt"></i> Safety</a></li>
+        <li><a href="{{ url_for('admin_logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+</div>
+{% block content %}
+<main class="admin-main">
+<div class="admin-header"><div><h1>Health Content</h1><p class="breadcrumb">Admin / Health</p></div><a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="fas fa-home"></i> View Site</a></div>
+<div class="add-form"><h3>➕ Add Health Tip</h3>
+<form method="POST" action="{{ url_for('admin_add_health_tip') }}">
+<div class="form-row"><div class="form-group"><label>Title *</label><input type="text" name="title" required placeholder="Tip title"></div><div class="form-group"><label>Icon</label><input type="text" name="icon" placeholder="🩺"></div></div>
+<div class="form-group" style="margin-top:1rem"><label>Content *</label><textarea name="content" required placeholder="Tip content"></textarea></div>
+<button type="submit" class="btn btn-primary" style="margin-top:1rem"><i class="fas fa-plus"></i> Add Tip</button></form></div>
+<div class="section-card"><h3>📋 All Health Tips</h3>
+{% if tips %}<table class="data-table"><thead><tr><th>ID</th><th>Icon</th><th>Title</th><th>Content</th><th>Actions</th></tr></thead><tbody>{% for tip in tips %}<tr><td>{{ tip.id }}</td><td>{{ tip.icon or '📌' }}</td><td>{{ tip.title }}</td><td>{{ tip.content[:50] }}...</td><td><a href="{{ url_for('admin_delete_health_tip', id=tip.id) }}" class="action-btn delete" onclick="return confirm('Delete?')">Delete</a></td></tr>{% endfor %}</tbody></table>{% else %}<p>No tips found.</p>{% endif %}</div>
+</main>
+{% endblock %}
+

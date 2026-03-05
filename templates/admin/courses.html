@@ -1,0 +1,48 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Manage Courses - EmpowerHer Admin{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<style>
+    .add-form { background: var(--card-bg); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; }
+    .add-form h3 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 1rem; }
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-color); font-size: 0.9rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.7rem; border: 2px solid #eee; border-radius: 8px; font-size: 0.9rem; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="admin-main">
+<div class="admin-header">
+    <div><h1>Online Courses</h1><p class="breadcrumb">Admin / Courses</p></div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="fas fa-home"></i> View Site</a>
+</div>
+<div class="add-form">
+    <h3>➕ Add New Course</h3>
+    <form method="POST" action="{{ url_for('admin_add_course') }}">
+        <div class="form-row">
+            <div class="form-group"><label>Course Title *</label><input type="text" name="title" required placeholder="e.g. Digital Marketing"></div>
+            <div class="form-group"><label>Provider *</label><input type="text" name="provider" required placeholder="e.g. Google"></div>
+            <div class="form-group"><label>Category</label><select name="category"><option value="Technology">Technology</option><option value="Marketing">Marketing</option><option value="Finance">Finance</option><option value="Leadership">Leadership</option></select></div>
+        </div>
+        <div class="form-row" style="margin-top:1rem">
+            <div class="form-group"><label>Level</label><select name="level"><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option></select></div>
+            <div class="form-group"><label>Duration</label><input type="text" name="duration" placeholder="e.g. 40 hours"></div>
+            <div class="form-group"><label>Link</label><input type="text" name="link" placeholder="Course URL"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem"><i class="fas fa-plus"></i> Add Course</button>
+    </form>
+</div>
+<div class="admin-section">
+    <h2>📚 All Online Courses</h2>
+    {% if courses %}
+    <table class="data-table"><thead><tr><th>ID</th><th>Title</th><th>Provider</th><th>Category</th><th>Level</th><th>Actions</th></tr></thead>
+    <tbody>{% for course in courses %}<tr><td>{{ course.id }}</td><td>{{ course.title }}</td><td>{{ course.provider }}</td><td>{{ course.category or 'N/A' }}</td><td>{{ course.level or 'N/A' }}</td><td><a href="{{ url_for('admin_delete_course', id=course.id) }}" class="action-btn delete" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a></td></tr>{% endfor %}</tbody></table>
+    {% else %}<p style="text-align:center;padding:2rem;color:var(--secondary-text)">No courses found.</p>{% endif %}
+</div>
+</main>
+{% endblock %}
+

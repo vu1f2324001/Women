@@ -1,0 +1,472 @@
+{% extends "base.html" %}
+
+{% block title %}Education - EmpowerHer{% endblock %}
+
+{% block extra_css %}
+<style>
+    .education-hero {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.3) 0%, rgba(230, 230, 250, 0.3) 100%);
+        padding: 8rem 2rem 4rem;
+        text-align: center;
+    }
+    
+    .education-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+    
+    .education-hero p {
+        font-size: 1.2rem;
+        color: var(--secondary-text);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .education-content {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* Search Filter Section */
+    .search-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-filters {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .search-input {
+        flex: 1;
+        min-width: 250px;
+        padding: 0.8rem 1rem;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+    
+    .filter-select {
+        padding: 0.8rem 1rem;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-size: 1rem;
+        background: white;
+        cursor: pointer;
+        min-width: 150px;
+    }
+    
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+    
+    .search-btn {
+        padding: 0.8rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .search-btn:hover {
+        background: #e8a8b5;
+    }
+    
+    /* Courses Section */
+    .education-section {
+        margin-bottom: 4rem;
+    }
+    
+    .education-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+    
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .course-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .course-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .course-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    
+    .course-badge {
+        background: rgba(255, 192, 203, 0.3);
+        color: var(--primary-color);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .course-badge.level {
+        background: rgba(147, 112, 219, 0.2);
+        color: #9370DB;
+    }
+    
+    .course-card h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .course-provider {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .course-details {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .course-detail {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        color: var(--secondary-text);
+        font-size: 0.85rem;
+    }
+    
+    .course-detail i {
+        color: var(--primary-color);
+    }
+    
+    /* Scholarships Section */
+    .scholarships-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .scholarship-card {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.2) 0%, rgba(230, 230, 250, 0.2) 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .scholarship-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .scholarship-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .scholarship-card h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .scholarship-provider {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .scholarship-amount {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    
+    /* Mentors Section */
+    .mentors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .mentor-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .mentor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(255, 192, 203, 0.3);
+    }
+    
+    .mentor-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+    
+    .mentor-card h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 0.3rem;
+    }
+    
+    .mentor-category {
+        color: var(--primary-color);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .mentor-card p {
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    /* Mentorship CTA */
+    .mentorship-cta {
+        background: linear-gradient(135deg, rgba(255, 192, 203, 0.2) 0%, rgba(230, 230, 250, 0.2) 100%);
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        margin-top: 3rem;
+    }
+    
+    .mentorship-cta h2 {
+        margin-bottom: 1rem;
+    }
+    
+    .mentorship-cta p {
+        color: var(--secondary-text);
+        margin-bottom: 1.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    @media (max-width: 768px) {
+        .education-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .search-filters {
+            flex-direction: column;
+        }
+        
+        .search-input, .filter-select, .search-btn {
+            width: 100%;
+        }
+        
+        .courses-grid, .scholarships-grid, .mentors-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Education Hero -->
+<section class="education-hero">
+    <h1>📚 Education & Learning</h1>
+    <p>Explore courses, scholarships, and mentorship programs to advance your knowledge and skills.</p>
+</section>
+
+<!-- Education Content -->
+<section class="education-content">
+    <!-- Search/Filter -->
+    <div class="search-section">
+        <div class="search-filters">
+            <input type="text" class="search-input" id="courseSearch" placeholder="Search courses...">
+            <select class="filter-select" id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="Technology">Technology</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Finance">Finance</option>
+                <option value="Leadership">Leadership</option>
+                <option value="Content">Content</option>
+            </select>
+            <select class="filter-select" id="levelFilter">
+                <option value="">All Levels</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+            <button class="search-btn" onclick="filterCourses()">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </div>
+    </div>
+    
+    <!-- Courses Section -->
+    <div class="education-section">
+        <h2>🎓 Online Courses</h2>
+        <div class="courses-grid" id="coursesGrid">
+            {% for course in courses %}
+            <div class="course-card" data-category="{{ course.category }}" data-level="{{ course.level }}">
+                <div class="course-header">
+                    <span class="course-badge">{{ course.category }}</span>
+                    <span class="course-badge level">{{ course.level }}</span>
+                </div>
+                <h3>{{ course.title }}</h3>
+                <p class="course-provider">{{ course.provider }}</p>
+                <div class="course-details">
+                    <span class="course-detail">
+                        <i class="fas fa-clock"></i> {{ course.duration }}
+                    </span>
+                    <span class="course-detail">
+                        <i class="fas fa-play-circle"></i> Online
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Scholarships Section -->
+    <div class="education-section">
+        <h2>💰 Scholarships</h2>
+        <div class="scholarships-grid">
+            {% for scholarship in scholarships %}
+            <div class="scholarship-card">
+                <div class="scholarship-icon">🎓</div>
+                <h3>{{ scholarship.name }}</h3>
+                <p class="scholarship-provider">{{ scholarship.provider }}</p>
+                <div class="scholarship-amount">{{ scholarship.amount }}</div>
+                <a href="#" class="btn btn-primary">Apply Now</a>
+            </div>
+            {% endfor %}
+            
+            <!-- Additional Static Scholarships -->
+            <div class="scholarship-card">
+                <div class="scholarship-icon">🎓</div>
+                <h3>Post-Graduation Scholarship</h3>
+                <p class="scholarship-provider">Various Universities</p>
+                <div class="scholarship-amount">₹2,00,000</div>
+                <a href="#" class="btn btn-primary">Apply Now</a>
+            </div>
+            
+            <div class="scholarship-card">
+                <div class="scholarship-icon">🎓</div>
+                <h3>Tech Women Fellowship</h3>
+                <p class="scholarship-provider">Tech Industry Leaders</p>
+                <div class="scholarship-amount">₹5,00,000</div>
+                <a href="#" class="btn btn-primary">Apply Now</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mentors Section -->
+    <div class="education-section">
+        <h2>🌟 Mentor of the Week</h2>
+        <div class="mentors-grid">
+            {% for mentor in mentors %}
+            <div class="mentor-card">
+                <div class="mentor-image">
+                    {% if mentor.image_url %}
+                    <img src="{{ mentor.image_url }}" alt="{{ mentor.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    {% else %}
+                    👩‍💼
+                    {% endif %}
+                </div>
+                <h3>{{ mentor.name }}</h3>
+                <p class="mentor-category">{{ mentor.category }}</p>
+                <p>{{ mentor.description }}</p>
+            </div>
+            {% endfor %}
+            
+            {% if mentors|length == 0 %}
+            <div class="mentor-card">
+                <div class="mentor-image">👩‍💼</div>
+                <h3>Be a Mentor</h3>
+                <p class="mentor-category">Join Our Community</p>
+                <p>Share your expertise and help other women achieve their goals.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Mentorship CTA -->
+    <div class="mentorship-cta">
+        <h2>🤝 Become a Mentor</h2>
+        <p>Share your knowledge and experience with aspiring women. Join our mentorship program and make a difference in someone's life.</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">Sign Up as Mentor</a>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+    function filterCourses() {
+        const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+        const level = document.getElementById('levelFilter').value;
+        const cards = document.querySelectorAll('.course-card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const cardCategory = card.getAttribute('data-category');
+            const cardLevel = card.getAttribute('data-level');
+            
+            const matchesSearch = title.includes(searchTerm);
+            const matchesCategory = !category || cardCategory === category;
+            const matchesLevel = !level || cardLevel === level;
+            
+            if (matchesSearch && matchesCategory && matchesLevel) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    // Add event listeners for real-time filtering
+    document.getElementById('courseSearch').addEventListener('input', filterCourses);
+    document.getElementById('categoryFilter').addEventListener('change', filterCourses);
+    document.getElementById('levelFilter').addEventListener('change', filterCourses);
+</script>
+{% endblock %}
+
+{% endblock %}
+

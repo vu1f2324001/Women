@@ -1,0 +1,26 @@
+{% extends "admin/dashboard.html" %}
+{% block title %}Manage Safe Locations - EmpowerHer Admin{% endblock %}
+{% block extra_css %}
+{{ super() }}
+<style>
+    .add-form { background: var(--card-bg); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; }
+    .add-form h3 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 1rem; }
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-color); font-size: 0.9rem; }
+    .form-group input, .form-group select { width: 100%; padding: 0.7rem; border: 2px solid #eee; border-radius: 8px; font-size: 0.9rem; }
+    .form-group input:focus { outline: none; border-color: var(--primary-color); }
+</style>
+{% endblock %}
+{% block content %}
+<main class="admin-main">
+<div class="admin-header"><div><h1>Safe Locations</h1><p class="breadcrumb">Admin / Safety</p></div><a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="fas fa-home"></i> View Site</a></div>
+<div class="add-form"><h3>➕ Add Safe Location</h3>
+<form method="POST" action="{{ url_for('admin_add_safe_location') }}">
+<div class="form-row"><div class="form-group"><label>Name *</label><input type="text" name="name" required placeholder="Location name"></div><div class="form-group"><label>Type *</label><select name="type"><option value="Police Station">Police Station</option><option value="Hospital">Hospital</option><option value="Helpline">Helpline</option><option value="Shelter">Shelter</option></select></div><div class="form-group"><label>Phone</label><input type="text" name="phone" placeholder="Phone number"></div></div>
+<div class="form-group" style="margin-top:1rem"><label>Address</label><input type="text" name="address" placeholder="Full address"></div>
+<button type="submit" class="btn btn-primary" style="margin-top:1rem"><i class="fas fa-plus"></i> Add Location</button></form></div>
+<div class="admin-section"><h3>📍 All Safe Locations</h3>
+{% if locations %}<table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>Actions</th></tr></thead><tbody>{% for loc in locations %}<tr><td>{{ loc.id }}</td><td>{{ loc.name }}</td><td>{{ loc.type }}</td><td>{{ loc.phone or 'N/A' }}</td><td><a href="{{ url_for('admin_delete_safe_location', id=loc.id) }}" class="action-btn delete" onclick="return confirm('Delete?')">Delete</a></td></tr>{% endfor %}</tbody></table>{% else %}<p>No locations found.</p>{% endif %}</div>
+</main>
+{% endblock %}
+
