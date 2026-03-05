@@ -1,0 +1,29 @@
+# Render Blueprint Configuration for EmpowerHer
+# Save this file as render.yaml in your project root
+
+services:
+  - type: web
+    name: empowerher
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: DATABASE_NAME
+        value: database.db
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: false
+      - key: SECRET_KEY
+        # Generate a secure random key: python -c "import secrets; print(secrets.token_hex(32))"
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        # Change this to your desired password in Render dashboard
+        value: changeme
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 10000
+
