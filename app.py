@@ -27,8 +27,10 @@ app = Flask(__name__)
 # Get secret key from environment variable or use a default for development
 app.secret_key = os.getenv('SECRET_KEY', 'dev_secret_key_change_in_production')
 
+
 # Database configuration
-DATABASE = os.getenv('DATABASE_NAME', 'database.db')
+DATABASE = os.getenv('DATABASE_NAME', '/tmp/empowerher.db')
+
 
 # Admin credentials from environment variables
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'admin')
